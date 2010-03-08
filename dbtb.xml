@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="dbtb" default="all">
+  
+  
+  <property file="dbtb.properties"/>
+  <!-- Uncomment the following property if no tests compilation is needed -->
+  <!-- 
+  <property name="skip.tests" value="true"/>
+   -->
+  
+  <!-- Compiler options -->
+  
+  <property name="compiler.debug" value="on"/>
+  <property name="compiler.generate.no.warnings" value="off"/>
+  <property name="compiler.args" value=""/>
+  <property name="compiler.max.memory" value="128m"/>
+  <patternset id="ignored.files">
+    <exclude name="**/CVS/**"/>
+    <exclude name="**/SCCS/**"/>
+    <exclude name="**/RCS/**"/>
+    <exclude name="**/rcs/**"/>
+    <exclude name="**/.DS_Store/**"/>
+    <exclude name="**/.svn/**"/>
+    <exclude name="**/.pyc/**"/>
+    <exclude name="**/.pyo/**"/>
+    <exclude name="**/*.pyc/**"/>
+    <exclude name="**/*.pyo/**"/>
+    <exclude name="**/.git/**"/>
+    <exclude name="**/*.hprof/**"/>
+    <exclude name="**/_svn/**"/>
+  </patternset>
+  <patternset id="library.patterns">
+    <include name="*.zip"/>
+    <include name="*.war"/>
+    <include name="*.egg"/>
+    <include name="*.ear"/>
+    <include name="*.swc"/>
+    <include name="*.jar"/>
+  </patternset>
+  <patternset id="compiler.resources">
+    <include name="**/?*.properties"/>
+    <include name="**/?*.xml"/>
+    <include name="**/?*.gif"/>
+    <include name="**/?*.png"/>
+    <include name="**/?*.jpeg"/>
+    <include name="**/?*.jpg"/>
+    <include name="**/?*.html"/>
+    <include name="**/?*.dtd"/>
+    <include name="**/?*.tld"/>
+  </patternset>
+  
+  
+  <!-- Application Server Libraries -->
+  
+  <!-- Modules -->
+  
+  
+  <!-- Module dbtb -->
+  
+  <dirname property="module.dbtb.basedir" file="${ant.file}"/>
+  
+  
+  
+  <property name="compiler.args.dbtb" value="${compiler.args}"/>
+  
+  <property name="dbtb.output.dir" value="${module.dbtb.basedir}/out/production/dbtb"/>
+  <property name="dbtb.testoutput.dir" value="${module.dbtb.basedir}/out/test/dbtb"/>
+  
+  <path id="dbtb.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="dbtb.module.classpath">
+    <pathelement location="${basedir}/lib/junit-4.7.jar"/>
+  </path>
+  
+  <path id="dbtb.runtime.module.classpath">
+    <pathelement location="${dbtb.output.dir}"/>
+    <pathelement location="${dbtb.testoutput.dir}"/>
+    <pathelement location="${basedir}/lib/junit-4.7.jar"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.dbtb">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.dbtb">
+    <patternset refid="excluded.from.module.dbtb"/>
+  </patternset>
+  
+  <path id="dbtb.module.sourcepath">
+    <dirset dir="${module.dbtb.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  <path id="dbtb.module.test.sourcepath">
+    <dirset dir="${module.dbtb.basedir}">
+      <include name="test"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.dbtb" depends="compile.module.dbtb.production,compile.module.dbtb.tests" description="Compile module dbtb"/>
+  
+  <target name="compile.module.dbtb.production" description="Compile module dbtb; production classes">
+    <mkdir dir="${dbtb.output.dir}"/>
+    <javac destdir="${dbtb.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true">
+      <compilerarg line="${compiler.args.dbtb}"/>
+      <bootclasspath refid="dbtb.module.bootclasspath"/>
+      <classpath refid="dbtb.module.classpath"/>
+      <src refid="dbtb.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.dbtb"/>
+    </javac>
+    
+    <copy todir="${dbtb.output.dir}">
+      <fileset dir="${module.dbtb.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.dbtb.tests" depends="compile.module.dbtb.production" description="compile module dbtb; test classes" unless="skip.tests">
+    <mkdir dir="${dbtb.testoutput.dir}"/>
+    <javac destdir="${dbtb.testoutput.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true">
+      <compilerarg line="${compiler.args.dbtb}"/>
+      <classpath refid="dbtb.module.classpath"/>
+      <classpath>
+        <path refid="dbtb.module.classpath"/>
+        <pathelement location="${dbtb.output.dir}"/>
+      </classpath>
+      <src refid="dbtb.module.test.sourcepath"/>
+      <patternset refid="excluded.from.compilation.dbtb"/>
+    </javac>
+    
+    <copy todir="${dbtb.testoutput.dir}">
+      <fileset dir="${module.dbtb.basedir}/test">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="clean.module.dbtb" description="cleanup module">
+    <delete dir="${dbtb.output.dir}"/>
+    <delete dir="${dbtb.testoutput.dir}"/>
+  </target>
+  
+  <target name="init" description="Build initialization">
+    <!-- Perform any build initialization in this target -->
+  </target>
+  
+  <target name="clean" depends="clean.module.dbtb" description="cleanup all"/>
+  
+  <target name="all" depends="init, clean, compile.module.dbtb" description="build all"/>
+</project>

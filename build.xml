@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="dbtb" default="tests">
+
+    <import file="dbtb.xml"/>
+
+    <target name="tests" depends="all">
+        <junit >
+            <classpath refid="dbtb.runtime.module.classpath"/>
+            <batchtest>
+                <fileset dir="test" includes="**/*Test.java"/> 
+            </batchtest>
+        </junit>
+    </target>
+
+
+</project>
