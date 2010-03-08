@@ -1,6 +1,6 @@
 A transactional map.
 
-Adds the notion isolated transactions to a map.
+Adds the notion of isolated transactions to a map.
 
 All operations defined on the cut down map interface net.pokle.dbtb.Database can
 be commited (or rolledback) in isolation to any changes made in other transactions.
