@@ -1,4 +1,5 @@
-A transactional map.
+A transactional map
+----
 
 Adds the notion of isolated transactions to a map.
 
